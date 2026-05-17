@@ -1,4 +1,4 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbxVop5SECOMQXffxwQc0DdxxKuUjZgbsEjM5BiVzefgIIoWQVTXolggNtcA_aUny0ud/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxKq4kFmB9aMph0PFdNt5VqO5fDyfKVamaQWdtDOvBeLqYD84c5fpg3BqLikwaRwhot/exec";
 
 let entries = [];
 let chart;
@@ -60,7 +60,7 @@ await fetch(API_URL, {
   method:'POST',
 
   headers:{
-    "Content-Type":"text/plain"
+    "Content-Type":"text/plain;charset=utf-8"
   },
 
   body: JSON.stringify(entry)
