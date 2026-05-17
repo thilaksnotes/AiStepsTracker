@@ -1,4 +1,4 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbxKq4kFmB9aMph0PFdNt5VqO5fDyfKVamaQWdtDOvBeLqYD84c5fpg3BqLikwaRwhot/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbw10r-WWFirFZ69Gdmty9j3uARwdEAGMXhBgwAxbKerfn_bn1t2jbPP4F_z6Pj10kL9/exec";
 
 let entries = [];
 let chart;
@@ -242,7 +242,7 @@ sorted.forEach((e,index)=>{
 tbody.innerHTML += `
 <tr>
 <td>#${index+1}</td>
-<td>${e.date}</td>
+<td>${formatDisplayDate(e.date)}</td>
 <td>${e.total.toLocaleString()}</td>
 </tr>
 `;
@@ -276,6 +276,21 @@ heatmap.appendChild(div);
 
 }
 
+function formatDisplayDate(dateStr){
+
+  const d = new Date(dateStr);
+
+  return d.toLocaleDateString(
+    'en-GB',
+    {
+      day:'2-digit',
+      month:'short',
+      year:'2-digit'
+    }
+  );
+
+}
+
 function renderChart(){
 
 const ctx =
@@ -289,7 +304,9 @@ type:'line',
 
 data:{
 
-labels: entries.map(e=>e.date),
+labels: entries.map(
+  e=>formatDisplayDate(e.date)
+),
 
 datasets:[{
 
