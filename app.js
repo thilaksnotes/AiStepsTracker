@@ -28,7 +28,11 @@ alert("Unable to load cloud data.");
 
 }
 }
+function getAdjustedZeppSteps(rawZepp){
 
+  return Math.round(rawZepp * 1.2);
+
+}
 async function saveEntry(){
 
 const date =
@@ -37,8 +41,11 @@ document.getElementById("date").value;
 const samsung =
 parseInt(document.getElementById("samsungSteps").value || 0);
 
-const zepp =
+const rawZepp =
 parseInt(document.getElementById("zeppSteps").value || 0);
+
+const zepp =
+getAdjustedZeppSteps(rawZepp);
 
 const goal =
 parseInt(document.getElementById("goal").value || 10000);
@@ -85,8 +92,14 @@ function updateLiveProgress(){
 const samsung =
 parseInt(document.getElementById("samsungSteps").value || 0);
 
-const zepp =
+const rawZepp =
 parseInt(document.getElementById("zeppSteps").value || 0);
+
+const zepp =
+getAdjustedZeppSteps(rawZepp);
+
+document.getElementById("adjustedZeppSteps").value =
+zepp;
 
 const goal =
 parseInt(document.getElementById("goal").value || 10000);
