@@ -6,7 +6,7 @@ let chart;
 document.getElementById("date").valueAsDate = new Date();
 
 async function loadCloudData(){
-
+showLoading("Loading step history...");
 try{
 
 const response = await fetch(API_URL);
@@ -19,13 +19,13 @@ new Date(a.date)-new Date(b.date)
 
 renderDashboard();
 loadDateData();
-
+hideLoading();
 }catch(err){
 
 console.error(err);
 
 alert("Unable to load cloud data.");
-
+hideLoading();
 }
 }
 function getAdjustedZeppSteps(rawZepp){
@@ -59,7 +59,7 @@ zepp,
 goal,
 total
 };
-
+showLoading("Saving to Google Sheets...");
 try{
 
 await fetch(API_URL, {
@@ -75,13 +75,13 @@ await fetch(API_URL, {
 });
 
 await loadCloudData();
-
+hideLoading();
 alert("Saved to Google Sheets successfully!");
 
 }catch(err){
 
 console.error(err);
-
+hideLoading();
 alert("Save failed.");
 
 }
@@ -238,7 +238,24 @@ insight = `📈 You are below your average of ${avg.toLocaleString()} steps.`;
 document.getElementById("aiInsights").innerText = insight;
 
 }
+function showLoading(text){
 
+  document.getElementById("loadingText").innerText =
+    text;
+
+  document
+    .getElementById("loadingOverlay")
+    .classList.remove("hidden");
+
+}
+
+function hideLoading(){
+
+  document
+    .getElementById("loadingOverlay")
+    .classList.add("hidden");
+
+}
 function renderLeaderboard(){
 
 const tbody =
