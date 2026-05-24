@@ -159,3 +159,47 @@ color:#d1d5db;
 grid-template-columns:1fr;
 }
 }
+#loadingOverlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.7);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+}
+
+.loader-card{
+  background:#1f2937;
+  padding:30px;
+  border-radius:20px;
+  text-align:center;
+}
+
+.spinner{
+  width:50px;
+  height:50px;
+  border:5px solid #374151;
+  border-top:5px solid #10b981;
+  border-radius:50%;
+  animation:spin 1s linear infinite;
+  margin:auto;
+}
+
+#loadingText{
+  margin-top:20px;
+  font-size:16px;
+}
+
+.hidden{
+  display:none !important;
+}
+
+@keyframes spin{
+  from{
+    transform:rotate(0deg);
+  }
+  to{
+    transform:rotate(360deg);
+  }
+}
