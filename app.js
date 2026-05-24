@@ -134,7 +134,8 @@ if(existing){
 
 document.getElementById("samsungSteps").value = existing.samsung;
 
-document.getElementById("zeppSteps").value = existing.zepp;
+document.getElementById("zeppSteps").value =
+  Math.round(existing.zepp / 1.2);
 
 document.getElementById("goal").value = existing.goal;
 
