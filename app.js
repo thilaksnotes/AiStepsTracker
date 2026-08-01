@@ -167,16 +167,24 @@ function updateStats(){
 
 if(entries.length===0) return;
 
-const latest = entries[entries.length-1];
+const referenceDate = getReferenceDate();
 
-const month = latest.date.substring(0,7);
+const month =
+    referenceDate.toISOString().substring(0,7);
 
 let monthly = 0;
 
 entries.forEach(e=>{
-if(e.date.startsWith(month)){
-monthly += e.total;
-}
+
+    const d = new Date(e.date);
+
+    if(
+        e.date.startsWith(month) &&
+        d <= referenceDate
+    ){
+        monthly += e.total;
+    }
+
 });
 
 document.getElementById("monthlyTotal").innerText =
@@ -188,16 +196,81 @@ document.getElementById("bestDay").innerText =
 best.toLocaleString();
 
 calculateStreak();
+calculateWeeklyAverages();
+}
+function calculateWeeklyAverages(){
+
+    const today = getReferenceDate();
+
+    // Sunday = 0
+
+    const day = today.getDay();
+
+    // Beginning of current week (Sunday)
+
+    const currentSunday = new Date(today);
+    currentSunday.setDate(today.getDate() - day);
+    currentSunday.setHours(0,0,0,0);
+
+    // Beginning of previous week
+
+    const previousSunday = new Date(currentSunday);
+    previousSunday.setDate(previousSunday.getDate() - 7);
+
+    const previousSaturday = new Date(previousSunday);
+    previousSaturday.setDate(previousSunday.getDate() + 6);
+
+    let currentTotal = 0;
+    let previousTotal = 0;
+
+    entries.forEach(e=>{
+
+        const d = new Date(e.date);
+        d.setHours(0,0,0,0);
+
+        if(d >= currentSunday && d <= today){
+
+            currentTotal += e.total;
+
+        }
+
+        if(d >= previousSunday && d <= previousSaturday){
+
+            previousTotal += e.total;
+
+        }
+
+    });
+
+    const currentAverage =
+        Math.round(currentTotal / (day + 1));
+
+    const previousAverage =
+        Math.round(previousTotal / 7);
+
+    document.getElementById("currentWeekAvg").innerText =
+        currentAverage.toLocaleString();
+
+    document.getElementById("previousWeekAvg").innerText =
+        previousAverage.toLocaleString();
 
 }
+function getReferenceDate() {
 
+    return new Date(
+        document.getElementById("date").value
+    );
+
+}
 function calculateStreak(){
 
 let streak = 0;
 
-const sorted = [...entries].sort((a,b)=>
-new Date(b.date)-new Date(a.date)
-);
+const referenceDate = getReferenceDate();
+
+const sorted = [...entries]
+    .filter(e => new Date(e.date) <= referenceDate)
+    .sort((a,b)=>new Date(b.date)-new Date(a.date));
 
 for(let i=0;i<sorted.length;i++){
 
@@ -217,7 +290,13 @@ function updateInsights(){
 
 if(entries.length===0) return;
 
-const latest = entries[entries.length-1];
+const selectedDate =
+    document.getElementById("date").value;
+
+const latest =
+    entries.find(e => e.date === selectedDate);
+
+if(!latest) return;
 
 const avg =
 Math.round(
@@ -327,6 +406,16 @@ function renderChart(){
 const ctx =
 document.getElementById("stepsChart");
 
+  const referenceDate = getReferenceDate();
+
+const month =
+    referenceDate.toISOString().substring(0,7);
+
+const monthEntries =
+    entries.filter(e =>
+        e.date.startsWith(month)
+    );
+
 if(chart) chart.destroy();
 
 chart = new Chart(ctx,{
@@ -335,15 +424,13 @@ type:'line',
 
 data:{
 
-labels: entries.map(
-  e=>formatDisplayDate(e.date)
-),
+labels: monthEntries.map(e=>formatDisplayDate(e.date)),
 
 datasets:[{
 
 label:'Daily Steps',
 
-data: entries.map(e=>e.total),
+data: monthEntries.map(e=>e.total),
 
 tension:0.3
 
