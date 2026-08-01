@@ -33,6 +33,12 @@ function getAdjustedZeppSteps(rawZepp){
   return Math.round(rawZepp * 1.2);
 
 }
+
+function getCyclingSteps(distance){
+
+    return Math.round(distance * 400);
+
+}
 async function saveEntry(){
 
 const date =
@@ -47,10 +53,21 @@ parseInt(document.getElementById("zeppSteps").value || 0);
 const zepp =
 getAdjustedZeppSteps(rawZepp);
 
+const distance =
+parseFloat(
+    document.getElementById("cyclingDistance").value || 0
+);
+
+const cyclingSteps =
+getCyclingSteps(distance);
+
 const goal =
 parseInt(document.getElementById("goal").value || 10000);
 
-const total = samsung + zepp;
+const total =
+    samsung +
+    zepp +
+    cyclingSteps;
 
 const entry = {
 date,
@@ -101,10 +118,24 @@ getAdjustedZeppSteps(rawZepp);
 document.getElementById("adjustedZeppSteps").value =
 zepp;
 
+const distance =
+parseFloat(
+    document.getElementById("cyclingDistance").value || 0
+);
+
+const cyclingSteps =
+getCyclingSteps(distance);
+
+document.getElementById("cyclingSteps").value =
+cyclingSteps;
+  
 const goal =
 parseInt(document.getElementById("goal").value || 10000);
 
-const total = samsung + zepp;
+const total =
+    samsung +
+    zepp +
+    cyclingSteps;
 
 document.getElementById("todayTotal").innerText =
 total.toLocaleString();
@@ -136,7 +167,13 @@ document.getElementById("samsungSteps").value = existing.samsung;
 
 document.getElementById("zeppSteps").value =
   Math.round(existing.zepp / 1.2);
+  
+document.getElementById("cyclingDistance").value =
+existing.cyclingDistance;
 
+document.getElementById("cyclingSteps").value =
+existing.cyclingSteps;
+  
 document.getElementById("goal").value = existing.goal;
 
 }else{
@@ -462,5 +499,12 @@ document
 document
 .getElementById("date")
 .addEventListener("change", loadDateData);
+
+document
+.getElementById("cyclingDistance")
+.addEventListener(
+    "input",
+    updateLiveProgress
+);
 
 loadCloudData();
