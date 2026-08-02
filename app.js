@@ -392,9 +392,10 @@ document.querySelector("#leaderboardTable tbody");
 tbody.innerHTML = "";
 
 const sorted = [...entries]
-.sort((a,b)=>b.total-a.total)
-.slice(0,10);
-
+    .filter(e => Number(e.cyclingSteps || 0) === 0)
+    .sort((a,b) => b.total - a.total)
+    .slice(0,10);
+  
 sorted.forEach((e,index)=>{
 
 tbody.innerHTML += `
