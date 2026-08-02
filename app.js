@@ -70,11 +70,13 @@ const total =
     cyclingSteps;
 
 const entry = {
-date,
-samsung,
-zepp,
-goal,
-total
+    date,
+    samsung,
+    zepp,
+    cyclingDistance: distance,
+    cyclingSteps,
+    goal,
+    total
 };
 showLoading("Saving to Google Sheets...");
 try{
@@ -94,7 +96,7 @@ await fetch(API_URL, {
 await loadCloudData();
 hideLoading();
 alert("Saved to Google Sheets successfully!");
-
+renderDashboard();
 }catch(err){
 
 console.error(err);
@@ -126,8 +128,14 @@ parseFloat(
 const cyclingSteps =
 getCyclingSteps(distance);
 
-document.getElementById("cyclingSteps").value =
-cyclingSteps;
+const cyclingStepsField =
+    document.getElementById("cyclingSteps");
+
+if(cyclingStepsField){
+
+    cyclingStepsField.value = cyclingSteps;
+
+}
   
 const goal =
 parseInt(document.getElementById("goal").value || 10000);
@@ -179,8 +187,10 @@ document.getElementById("goal").value = existing.goal;
 }else{
 
 document.getElementById("samsungSteps").value = "";
-
 document.getElementById("zeppSteps").value = "";
+
+document.getElementById("cyclingDistance").value = "";
+document.getElementById("cyclingSteps").value = "";
 
 document.getElementById("goal").value = 10000;
 
@@ -205,6 +215,7 @@ function updateStats(){
 if(entries.length===0) return;
 
 const referenceDate = getReferenceDate();
+referenceDate.setHours(23,59,59,999);
 
 const month =
     referenceDate.toISOString().substring(0,7);
@@ -238,7 +249,7 @@ calculateWeeklyAverages();
 function calculateWeeklyAverages(){
 
     const today = getReferenceDate();
-
+today.setHours(23,59,59,999);
     // Sunday = 0
 
     const day = today.getDay();
@@ -498,7 +509,13 @@ document
 
 document
 .getElementById("date")
-.addEventListener("change", loadDateData);
+.addEventListener("change", () => {
+
+    loadDateData();
+
+    renderDashboard();
+
+});
 
 document
 .getElementById("cyclingDistance")
