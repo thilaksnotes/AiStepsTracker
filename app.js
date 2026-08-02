@@ -74,13 +74,13 @@ const entry = {
     samsung,
     zepp,
     cyclingDistance: distance,
-    cyclingSteps,
+    cyclingSteps: cyclingSteps,
     goal,
     total
 };
 showLoading("Saving to Google Sheets...");
 try{
-
+console.log("Saving Entry:", entry);
 await fetch(API_URL, {
 
   method:'POST',
